@@ -37,6 +37,11 @@ router.route("/sanpham/:id").get((request, response) => {
     response.json(data[0]);
   });
 });
+router.route("/sanpham/lsp/:id").get((request, response) => {
+  SanPhamDb.getTenLoaiSanPhamBySPId(request.params.id).then((data) => {
+    response.json(data[0]);
+  });
+});
 var port = process.env.PORT || 8090;
 app.listen(port);
 console.log("User API is runnning at " + port);
