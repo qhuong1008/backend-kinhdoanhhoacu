@@ -1,6 +1,6 @@
 var config = require("./config");
-
 const sql = require("mssql");
+
 async function getSanPham() {
   try {
     let pool = await sql.connect(config);

@@ -1,7 +1,7 @@
 var config = {
   user: "sa",
   password: "123456",
-  server: "localhost",
+  server: `localhost\\SQLEXPRESS`,
   database: "QUANLYHOACU",
   options: {
     encrypt: true,

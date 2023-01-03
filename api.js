@@ -1,4 +1,6 @@
 const SanPhamDb = require("./dbOperate/SanPham");
+const NguoiDungDb = require("./dbOperate/NguoiDung");
+const CartDb = require("./dbOperate/Cart");
 
 var express = require("express");
 var bodyParser = require("body-parser");
@@ -42,6 +44,35 @@ router.route("/sanpham/lsp/:id").get((request, response) => {
     response.json(data[0]);
   });
 });
+
+// ****** API NGUOIDUNG ****
+// *************************
+router.route("/nguoidung").get((request, response) => {
+  NguoiDungDb.getAllNguoiDung().then((data) => {
+    response.json(data[0]);
+  });
+});
+router.route("/nguoidung/:id").get((request, response) => {
+  NguoiDungDb.getNguoiDungById(request.params.id).then((data) => {
+    response.json(data[0]);
+  });
+});
+
+// ****** API CART *********
+// *************************
+router.route("/cart/:maHD").get((request, response) => {
+  CartDb.GetCartInfo(request.params.maHD).then((data) => {
+    response.json(data[0]);
+  });
+});
+
+router.route("/cart").post((request, response) => {
+  let cart = { ...request.body };
+  CartDb.AddToCart(cart).then((data) => {
+    response.status(201).json(data);
+  });
+});
+// LISTEN PORT
 var port = process.env.PORT || 8090;
 app.listen(port);
 console.log("User API is runnning at " + port);
