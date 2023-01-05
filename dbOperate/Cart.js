@@ -8,7 +8,7 @@ async function GetCartInfo(maHD) {
       .request()
       .input("maHD", sql.Char, maHD)
       .query(
-        `select Hinh, TenSP, SoLuong, TongPhu from ChiTietHoaDon inner join SanPham 
+        `select Hinh, TenSP, SoLuong,SanPham.MaSP, TongPhu from ChiTietHoaDon inner join SanPham 
         on ChiTietHoaDon.MaSP = SanPham.MaSP
         where ChiTietHoaDon.MaHoaDon = @maHD`
       );
