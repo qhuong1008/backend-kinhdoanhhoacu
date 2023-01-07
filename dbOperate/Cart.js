@@ -32,4 +32,17 @@ async function AddToCart(cart) {
   }
 }
 
-module.exports = { AddToCart, GetCartInfo };
+async function DeleteFromCart(cart) {
+  try {
+    let pool = await sql.connect(config);
+    await pool
+      .request()
+      .input("maNguoiDung", sql.VarChar, cart.maNguoiDung)
+      .input("maSP", sql.VarChar, cart.maSP)
+      .query("exec DeleteFromCart @maNguoiDung,@maSP");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = { AddToCart, GetCartInfo, DeleteFromCart };

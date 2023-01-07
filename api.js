@@ -1,6 +1,7 @@
 const SanPhamDb = require("./dbOperate/SanPham");
 const NguoiDungDb = require("./dbOperate/NguoiDung");
 const CartDb = require("./dbOperate/Cart");
+const HoaDonDb = require("./dbOperate/HoaDon");
 
 var express = require("express");
 var bodyParser = require("body-parser");
@@ -57,6 +58,18 @@ router.route("/nguoidung/:id").get((request, response) => {
     response.json(data[0]);
   });
 });
+router.route("/nguoidung").post((request, response) => {
+  let user = { ...request.body };
+  NguoiDungDb.EditNguoiDung(user).then((data) => {
+    response.status(201).json(data);
+  });
+});
+router.route("/nguoidung/changepw").post((request, response) => {
+  let user = { ...request.body };
+  NguoiDungDb.ChangePassword(user).then((data) => {
+    response.status(201).json(data);
+  });
+});
 
 // ****** API CART *********
 // *************************
@@ -69,6 +82,22 @@ router.route("/cart/:maHD").get((request, response) => {
 router.route("/cart").post((request, response) => {
   let cart = { ...request.body };
   CartDb.AddToCart(cart).then((data) => {
+    response.status(201).json(data);
+  });
+});
+
+router.route("/delete/cart").delete((request, response) => {
+  let cart = { ...request.body };
+  CartDb.DeleteFromCart(cart).then((data) => {
+    response.status(201).json(data);
+  });
+});
+
+// ****** API HOÁ ĐƠN *********
+// *************************
+router.route("/hoadon").post((request, response) => {
+  let info = { ...request.body };
+  HoaDonDb.ThanhToanHoaDon(info).then((data) => {
     response.status(201).json(data);
   });
 });

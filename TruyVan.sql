@@ -36,7 +36,16 @@ end
 go
 --exec AddToCart 'USER010','SP00010',2
 
---cập nhật tổng phụ của n sản phẩm sau khi thêm n sản phẩm vào giỏ
+-- procedure xóa sp khỏi cart
+go
+create procedure DeleteFromCart @maNguoiDung nvarchar(30), @maSP nvarchar(10)
+as begin
+delete from ChiTietHoaDon where ChiTietHoaDon.MaHoaDon = 'cart_'+@maNguoiDung and ChiTietHoaDon.MaSP=@maSP
+end
+
+--exec DeleteFromCart 'USER010','SP000100'
+
+--procedure cập nhật tổng phụ của n sản phẩm sau khi thêm n sản phẩm vào giỏ
 create trigger CapNhatTongPhu
 on ChiTietHoaDon
 after insert
@@ -50,35 +59,59 @@ as begin
 	where ChiTietHoaDon.MaSP = (select inserted.MaSP from inserted)
 end
 
-
---select [dbo].getPriceByProductId('SP0000')
-
 go
-update ChiTietHoaDon
-set TongPhu = SoLuong * [dbo].getPriceByProductId('SP0000') 
-where ChiTietHoaDon.MaSP = 'SP0000' 
+--procedure sau khi bấm nút thanh toán thì cart chuyển thành hóa đơn
+create procedure ThanhToanHoaDon @MaNguoiDung nvarchar(30),@hoten nvarchar(30), @diachi nvarchar(200), @sdt char(10), @ghichu nvarchar(30)
+as begin
+	insert into HoaDon values (REPLACE(@MaNguoiDung+CONVERT(VARCHAR(12),GETDATE(),114), ':', ''),@ghichu,0,@hoten,@diachi,@sdt,@MaNguoiDung,'',0,0,0,0);
+end
 
 
-
+--exec ThanhToanHoaDon 'USER001','dsd','dssffdsf','123456','ghi chu'
+--procedure Chuyển toàn bộ SP từ giỏ hàng sang hóa đơn, giỏ hàng lúc này rỗng
 go
---sau khi bấm nút thanh toán thì cart chuyển thành hóa đơn
-insert into HoaDon values('1111111','',0,'','','USER010','',0,0,0,0)
+create trigger CapNhatGioHangSauThanhToan
+on HoaDon
+after insert
+as begin
+	update ChiTietHoaDon 
+	set MaHoaDon = (select inserted.MaHoaDon from inserted)
+	where ChiTietHoaDon.MaHoaDon = 'cart_'+ (select MaKhachHang from inserted)
+end
+
+--procedure cập nhật tổng tiền sau khi thanh toán hóa đơn
 go
-update ChiTietHoaDon 
-set MaHoaDon = '1111111'
-where ChiTietHoaDon.MaHoaDon = 'cart_USER010'
+create trigger capnhatTongTienOnHoaDon
+on HoaDon
+after insert
+as begin
+	declare @tongtien int
+	set @tongtien = (select sum(TongPhu) from ChiTietHoaDon where ChiTietHoaDon.MaHoaDon=(select MaHoaDon from inserted))
+	update HoaDon
+	set HoaDon.TongThanhToan = @tongtien 
+	where HoaDon.MaHoaDon = (select MaHoaDon from inserted)
+end
 
+-- procedure update info NguoiDung
+go
+create procedure UpdateNguoiDung @manguoidung nvarchar(30), @username nvarchar(100), @password nvarchar(30), @hoten nvarchar(100), @ngaysinh date, @diachi nvarchar(100)
+as begin
+	update NguoiDung
+	set TenDangNhap=@username,MatKhau=@password,HoTen=@hoten,NgaySinh=@ngaysinh, DiaChi=@diachi
+	where NguoiDung.MaNguoiDung=@manguoidung
+end
 
+--exec UpdateNguoiDung 'USER001', 'qhuong1008','123','Hương Cute','01-31-2002','VN'
 
-select * from ChiTietHoaDon
-
-select [dbo].getNameByProductId(MaSP) as 'TenSP', SoLuong, TongPhu from ChiTietHoaDon
-where ChiTietHoaDon.MaHoaDon = 'cart_USER010'
-
-
-select [dbo].getNameByProductId(MaSP) as 'TenSP', SoLuong, TongPhu from ChiTietHoaDon
-                  where ChiTietHoaDon.MaHoaDon = 'cart_USER010'
-
+--procedure change password
+go
+create procedure changePassword @manguoidung nvarchar(30), @password nvarchar(30)
+as begin
+	update NguoiDung
+	set MatKhau=@password
+	where NguoiDung.MaNguoiDung=@manguoidung
+end
+-- exec changePassword 'USER001', '123456'
 
 
 

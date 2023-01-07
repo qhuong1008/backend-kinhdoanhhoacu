@@ -86,6 +86,8 @@ CREATE TABLE [dbo].[HoaDon]
     GhiChu nvarchar(200),
 
     TongThanhToan int,
+	
+	HoTen nvarchar(200),
 
     DiaChiGiaoHang nvarchar(200),
 
@@ -265,6 +267,7 @@ AS BEGIN
 
 	SET @userID = (select inserted.MaNguoiDung from inserted)
 
-	insert into HoaDon values (CONCAT('cart_',@userID),'',0,'','',@userID,'',0,0,0,0);
+	insert into HoaDon values (CONCAT('cart_',@userID),'',0,'','','',@userID,'',0,0,0,0);
 
 end
+
