@@ -113,6 +113,14 @@ as begin
 end
 -- exec changePassword 'USER001', '123456'
 
+select ChiTietHoaDon.MaHoaDon,x.MaSP,ChiTietHoaDon.SoLuong,ChiTietHoaDon.TongPhu,x.TenSP,x.MaLoaiSP,x.Gia
+from ChiTietHoaDon inner join (select SanPham.TenSP, SanPham.MaLoaiSP, SanPham.Gia, SanPham.MaSP from SanPham 
+							   inner join LoaiSanPham 
+							   on SanPham.MaLoaiSP = LoaiSanPham.MaLoaiSP) as x
+on ChiTietHoaDon.MaSP = x.MaSP
+where ChiTietHoaDon.MaHoaDon='USER002161354637'
+
+
 
 
 

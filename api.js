@@ -101,6 +101,16 @@ router.route("/hoadon").post((request, response) => {
     response.status(201).json(data);
   });
 });
+router.route("/hoadon/:userID").get((request, response) => {
+  HoaDonDb.getAllHoaDon(request.params.userID).then((data) => {
+    response.json(data[0]);
+  });
+});
+router.route("/hoadon/products/:orderID").get((request, response) => {
+  HoaDonDb.getAllProductsFromHoaDon(request.params.orderID).then((data) => {
+    response.json(data[0]);
+  });
+});
 // LISTEN PORT
 var port = process.env.PORT || 8090;
 app.listen(port);

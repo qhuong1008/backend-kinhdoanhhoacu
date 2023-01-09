@@ -1,6 +1,21 @@
 var config = require("./config");
 const sql = require("mssql");
 
+async function getAllHoaDon(userID) {
+  try {
+    let pool = await sql.connect(config);
+    let hoadonlist = await pool
+      .request()
+      .input("userID", sql.NVarChar, userID)
+      .query(
+        "select * from HoaDon where HoaDon.MaKhachHang=@userID and HoaDon.MaHoaDon not like '%cart%'"
+      );
+    return hoadonlist.recordsets;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function ThanhToanHoaDon(info) {
   try {
     let pool = await sql.connect(config);
@@ -16,4 +31,18 @@ async function ThanhToanHoaDon(info) {
     console.log(error);
   }
 }
-module.exports = { ThanhToanHoaDon };
+
+async function getAllProductsFromHoaDon(userID) {
+  try {
+    let pool = await sql.connect(config);
+    let productlist = await pool
+      .request()
+      .input("userID", sql.NVarChar, userID)
+      .query("exec getDonHangInfo @userID");
+    return productlist.recordsets;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = { ThanhToanHoaDon, getAllHoaDon, getAllProductsFromHoaDon };
