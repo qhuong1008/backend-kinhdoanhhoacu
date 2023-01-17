@@ -45,6 +45,11 @@ router.route("/sanpham/lsp/:id").get((request, response) => {
     response.json(data[0]);
   });
 });
+router.route("/loaisanpham").get((request, response) => {
+  SanPhamDb.getAllLoaiSP().then((data) => {
+    response.json(data[0]);
+  });
+});
 
 // ****** API NGUOIDUNG ****
 // *************************
@@ -86,7 +91,7 @@ router.route("/cart").post((request, response) => {
   });
 });
 
-router.route("/delete/cart").delete((request, response) => {
+router.route("/delete/cart").post((request, response) => {
   let cart = { ...request.body };
   CartDb.DeleteFromCart(cart).then((data) => {
     response.status(201).json(data);

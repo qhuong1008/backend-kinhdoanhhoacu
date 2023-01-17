@@ -45,4 +45,19 @@ async function getTenLoaiSanPhamBySPId(productId) {
   }
 }
 
-module.exports = { getSanPham, getSanPhamById, getTenLoaiSanPhamBySPId };
+async function getAllLoaiSP() {
+  try {
+    let pool = await sql.connect(config);
+    let loaisanpham = await pool.request().query("select * from LoaiSanPham");
+    return loaisanpham.recordsets;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = {
+  getSanPham,
+  getSanPhamById,
+  getTenLoaiSanPhamBySPId,
+  getAllLoaiSP,
+};

@@ -113,15 +113,26 @@ as begin
 end
 -- exec changePassword 'USER001', '123456'
 
-select ChiTietHoaDon.MaHoaDon,x.MaSP,ChiTietHoaDon.SoLuong,ChiTietHoaDon.TongPhu,x.TenSP,x.MaLoaiSP,x.Gia
-from ChiTietHoaDon inner join (select SanPham.TenSP, SanPham.MaLoaiSP, SanPham.Gia, SanPham.MaSP from SanPham 
-							   inner join LoaiSanPham 
-							   on SanPham.MaLoaiSP = LoaiSanPham.MaLoaiSP) as x
-on ChiTietHoaDon.MaSP = x.MaSP
-where ChiTietHoaDon.MaHoaDon='USER002161354637'
+go
+create procedure getDonHangInfo @userID nvarchar(30)
+as begin
+select y.MaSP,y.MaHoaDon,y.SoLuong,y.TongPhu,y.GhiChu,y.TongThanhToan,y.DiaChiGiaoHang,y.SoDienThoai,y.MaKhachHang,
+y.ThoiGianGiaoHang,y.TrangThaiGiaoHang,y.TrangThaiThanhToan,x.TenSP,x.MaLoaiSP,x.Gia, x.TenLoaiSanPham, x.Hinh
+from 
+(select ChiTietHoaDon.MaSP,ChiTietHoaDon.MaHoaDon,ChiTietHoaDon.SoLuong,ChiTietHoaDon.TongPhu,
+HoaDon.GhiChu,HoaDon.TongThanhToan,HoaDon.DiaChiGiaoHang,HoaDon.SoDienThoai,HoaDon.MaKhachHang,HoaDon.ThoiGianGiaoHang,
+HoaDon.TrangThaiGiaoHang,HoaDon.TrangThaiThanhToan
+from ChiTietHoaDon inner join HoaDon on ChiTietHoaDon.MaHoaDon = HoaDon.MaHoaDon) as y
+inner join 
+(select SanPham.TenSP,SanPham.Hinh, SanPham.MaLoaiSP, SanPham.Gia, SanPham.MaSP, LoaiSanPham.TenLoaiSanPham from SanPham 
+inner join LoaiSanPham on SanPham.MaLoaiSP = LoaiSanPham.MaLoaiSP) as x
+on y.MaSP = x.MaSP
+where y.MaKhachHang=@userID
+end
 
 
 
+exec getDonHangInfo 'USER002'
 
 
 
