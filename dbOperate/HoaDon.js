@@ -7,8 +7,35 @@ async function getAllHoaDon(userID) {
     let hoadonlist = await pool
       .request()
       .input("userID", sql.NVarChar, userID)
+      .query("select * from HoaDon where HoaDon.MaHoaDon not like '%cart%'");
+    return hoadonlist.recordsets;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function getAllHoaDonByUserId(userID) {
+  try {
+    let pool = await sql.connect(config);
+    let hoadonlist = await pool
+      .request()
+      .input("userID", sql.NVarChar, userID)
       .query(
         "select * from HoaDon where HoaDon.MaKhachHang=@userID and HoaDon.MaHoaDon not like '%cart%'"
+      );
+    return hoadonlist.recordsets;
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function getHoaDonByOrderId(orderID) {
+  try {
+    let pool = await sql.connect(config);
+    let hoadonlist = await pool
+      .request()
+      .input("orderID", sql.NVarChar, orderID)
+      .query(
+        "select * from HoaDon where HoaDon.MaHoaDon=@orderID and HoaDon.MaHoaDon not like '%cart%'"
       );
     return hoadonlist.recordsets;
   } catch (error) {
@@ -45,4 +72,10 @@ async function getAllProductsFromHoaDon(userID) {
   }
 }
 
-module.exports = { ThanhToanHoaDon, getAllHoaDon, getAllProductsFromHoaDon };
+module.exports = {
+  ThanhToanHoaDon,
+  getAllHoaDon,
+  getAllHoaDonByUserId,
+  getAllProductsFromHoaDon,
+  getHoaDonByOrderId,
+};

@@ -7,7 +7,7 @@ async function getSanPham() {
     let sanphamlist = await pool
       .request()
       .query(
-        "select MaSP, TenSP, Gia, ChiTiet,Hinh, LoaiSanPham.TenLoaiSanPham, LoaiSanPham.MaLoaiSP from SanPham inner join LoaiSanPham on SanPham.MaLoaiSP = LoaiSanPham.MaLoaiSP"
+        "select MaSP, TenSP, Gia, ChiTiet,Hinh, LoaiSanPham.TenLoaiSanPham, LoaiSanPham.MaLoaiSP, SanPham.DaXoa from SanPham inner join LoaiSanPham on SanPham.MaLoaiSP = LoaiSanPham.MaLoaiSP"
       );
     return sanphamlist.recordsets;
   } catch (error) {
@@ -54,10 +54,64 @@ async function getAllLoaiSP() {
     console.log(error);
   }
 }
+async function AddSanPham(sanpham) {
+  try {
+    let pool = await sql.connect(config);
+    await pool
+      .request()
+      .input("tenSP", sql.NVarChar, sanpham.tenSP)
+      .input("gia", sql.Int, sanpham.gia)
+      .input("chitiet", sql.NVarChar, sanpham.chitiet)
+      .input("hinh", sql.NVarChar, sanpham.hinh)
+      .input("maLsp", sql.NVarChar, sanpham.maLsp)
+      .query("exec AddSanPham @tenSP,@gia,@chitiet,@hinh,@maLsp");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function AddLoaiSanPham(sanpham) {
+  try {
+    let pool = await sql.connect(config);
+    await pool
+      .request()
+      .input("tenlsp", sql.NVarChar, sanpham.tenlsp)
+      .query("exec AddLoaiSanPham @tenlsp");
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function DeleteSanPhamById(id) {
+  try {
+    let pool = await sql.connect(config);
+    await pool
+      .request()
+      .input("Id", sql.NVarChar, id)
+      .query("exec deleteProductById @Id");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function DeleteLoaiSanPhamById(id) {
+  try {
+    let pool = await sql.connect(config);
+    await pool
+      .request()
+      .input("Id", sql.NVarChar, id)
+      .query("exec deleteProductTypeById @Id");
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 module.exports = {
   getSanPham,
   getSanPhamById,
   getTenLoaiSanPhamBySPId,
   getAllLoaiSP,
+  AddSanPham,
+  AddLoaiSanPham,
+  DeleteSanPhamById,
+  DeleteLoaiSanPhamById,
 };

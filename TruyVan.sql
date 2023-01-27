@@ -132,10 +132,61 @@ end
 
 
 
-exec getDonHangInfo 'USER002'
+--exec getDonHangInfo 'USER002'
+
+go
+create procedure AddNguoiDung @tendangnhap nvarchar(50),@matkhau nvarchar(30), @hoten nvarchar(200), @ngaysinh date, @diachi nvarchar(200), @hinh nvarchar(100)
+as begin
+insert into NguoiDung values (concat('USER00', (select max(NguoiDung.Stt)+1 from NguoiDung)),@tendangnhap,@matkhau,@hoten,@ngaysinh,@diachi,'001',0,@hinh)
+end
 
 
+exec AddNguoiDung 'qhuong969','123','hellokitty','2002-01-12','hcm','hinh'
+go
+create procedure AddSanPham @tenSP nvarchar(100),@gia int, @chitiet nvarchar(300),@hinh nvarchar(100),@maLsp nvarchar(10)
+as begin
+insert into SanPham values (concat('SP000',(select count(SanPham.MaSP)+2 from SanPham)),@tenSP,@gia,@chitiet,@hinh,@maLsp,0)
+end
 
+--exec AddSanPham 'sp3',12000,'chitiet','hinh','lsp02'
+
+go
+create procedure AddLoaiSanPham @tenlsp nvarchar(100)
+as begin
+insert into LoaiSanPham values(concat('lsp0',(select count(LoaiSanPham.MaLoaiSP)+1 from LoaiSanPham)),@tenlsp,0)
+end
+
+go
+create procedure DeleteNguoiDungById @id nvarchar(30)
+as begin
+update NguoiDung
+set NguoiDung.DaXoa = 1 
+where NguoiDung.MaNguoiDung = @id
+delete from HoaDon where HoaDon.MaHoaDon = 'cart_'+@id
+end
+
+--exec DeleteNguoiDungById 'USER0037'
+
+go
+create procedure deleteProductById @id nvarchar(30)
+as begin
+update SanPham
+set SanPham.DaXoa=1
+where SanPham.MaSP = @id
+end
+
+--exec deleteProductById 'SP000400'
+
+
+go
+create procedure deleteProductTypeById @id nvarchar(30)
+as begin
+update LoaiSanPham
+set LoaiSanPham.DaXoa=1
+where LoaiSanPham.MaLoaiSP = @id
+end
+
+exec deleteProductTypeById
 
 
 

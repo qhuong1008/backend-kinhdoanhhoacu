@@ -45,12 +45,33 @@ router.route("/sanpham/lsp/:id").get((request, response) => {
     response.json(data[0]);
   });
 });
+router.route("/sanpham/add").post((request, response) => {
+  let sanpham = { ...request.body };
+  SanPhamDb.AddSanPham(sanpham).then((data) => {
+    response.status(201).json(data);
+  });
+});
 router.route("/loaisanpham").get((request, response) => {
   SanPhamDb.getAllLoaiSP().then((data) => {
     response.json(data[0]);
   });
 });
-
+router.route("/loaisanpham/add").post((request, response) => {
+  let loaisanpham = { ...request.body };
+  SanPhamDb.AddLoaiSanPham(loaisanpham).then((data) => {
+    response.status(201).json(data);
+  });
+});
+router.route(`/sanpham/delete/:id`).post((request, response) => {
+  SanPhamDb.DeleteSanPhamById(request.params.id).then((data) => {
+    response.status(201).json(data);
+  });
+});
+router.route(`/loaisanpham/delete/:id`).post((request, response) => {
+  SanPhamDb.DeleteLoaiSanPhamById(request.params.id).then((data) => {
+    response.status(201).json(data);
+  });
+});
 // ****** API NGUOIDUNG ****
 // *************************
 router.route("/nguoidung").get((request, response) => {
@@ -66,6 +87,17 @@ router.route("/nguoidung/:id").get((request, response) => {
 router.route("/nguoidung").post((request, response) => {
   let user = { ...request.body };
   NguoiDungDb.EditNguoiDung(user).then((data) => {
+    response.status(201).json(data);
+  });
+});
+router.route("/nguoidung/add").post((request, response) => {
+  let user = { ...request.body };
+  NguoiDungDb.AddNguoiDung(user).then((data) => {
+    response.status(201).json(data);
+  });
+});
+router.route("/nguoidung/delete/:id").post((request, response) => {
+  NguoiDungDb.DeleteNguoiDungById(request.params.id).then((data) => {
     response.status(201).json(data);
   });
 });
@@ -106,8 +138,18 @@ router.route("/hoadon").post((request, response) => {
     response.status(201).json(data);
   });
 });
+router.route("/hoadon").get((request, response) => {
+  HoaDonDb.getAllHoaDon().then((data) => {
+    response.json(data[0]);
+  });
+});
 router.route("/hoadon/:userID").get((request, response) => {
-  HoaDonDb.getAllHoaDon(request.params.userID).then((data) => {
+  HoaDonDb.getAllHoaDonByUserId(request.params.userID).then((data) => {
+    response.json(data[0]);
+  });
+});
+router.route("/hoadon/orderId/:orderID").get((request, response) => {
+  HoaDonDb.getHoaDonByOrderId(request.params.orderID).then((data) => {
     response.json(data[0]);
   });
 });

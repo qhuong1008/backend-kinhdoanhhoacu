@@ -160,7 +160,7 @@ GO
 CREATE TABLE [dbo].[NguoiDung]
 
 (
-
+	
 	MaNguoiDung varchar(30)  primary key,
 
 	TenDangNhap varchar(30) unique,
@@ -180,7 +180,13 @@ CREATE TABLE [dbo].[NguoiDung]
 );
 
 GO
+alter table NguoiDung
+add Hinh nvarchar(500)	
 
+go
+alter table NguoiDung
+add Stt int identity(1,1)
+go
 
 
 /*

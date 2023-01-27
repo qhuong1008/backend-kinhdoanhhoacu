@@ -39,6 +39,25 @@ async function getNguoiDungById(id) {
   }
 }
 
+async function AddNguoiDung(user) {
+  try {
+    let pool = await sql.connect(config);
+    await pool
+      .request()
+      .input("tendangnhap", sql.NVarChar, user.tendangnhap)
+      .input("matkhau", sql.NVarChar, user.matkhau)
+      .input("hoten", sql.NVarChar, user.hoten)
+      .input("ngaysinh", sql.Date, user.ngaysinh)
+      .input("diachi", sql.NVarChar, user.diachi)
+      .input("hinh", sql.NVarChar, user.hinh)
+      .query(
+        "exec AddNguoiDung @tendangnhap,@matkhau,@hoten,@ngaysinh,@diachi,@hinh"
+      );
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function EditNguoiDung(user) {
   try {
     let pool = await sql.connect(config);
@@ -57,6 +76,19 @@ async function EditNguoiDung(user) {
     console.log(error);
   }
 }
+
+async function DeleteNguoiDungById(id) {
+  try {
+    let pool = await sql.connect(config);
+    await pool
+      .request()
+      .input("Id", sql.Char, id)
+      .query("exec DeleteNguoiDungById @Id");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function ChangePassword(user) {
   try {
     let pool = await sql.connect(config);
@@ -73,6 +105,8 @@ module.exports = {
   getAllNguoiDung,
   getNguoiDungAuth,
   getNguoiDungById,
+  AddNguoiDung,
   EditNguoiDung,
   ChangePassword,
+  DeleteNguoiDungById,
 };
