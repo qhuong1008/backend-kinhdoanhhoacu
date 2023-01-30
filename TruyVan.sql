@@ -63,7 +63,7 @@ go
 --procedure sau khi bấm nút thanh toán thì cart chuyển thành hóa đơn
 create procedure ThanhToanHoaDon @MaNguoiDung nvarchar(30),@hoten nvarchar(30), @diachi nvarchar(200), @sdt char(10), @ghichu nvarchar(30)
 as begin
-	insert into HoaDon values (REPLACE(@MaNguoiDung+CONVERT(VARCHAR(12),GETDATE(),114), ':', ''),@ghichu,0,@hoten,@diachi,@sdt,@MaNguoiDung,'',0,0,0,0);
+	insert into HoaDon values (REPLACE(@MaNguoiDung+CONVERT(VARCHAR(12),GETDATE(),114), ':', ''),@ghichu,0,@hoten,@diachi,@sdt,@MaNguoiDung,(select GETDATE()),0,0,0,0);
 end
 
 
@@ -186,12 +186,50 @@ set LoaiSanPham.DaXoa=1
 where LoaiSanPham.MaLoaiSP = @id
 end
 
-exec deleteProductTypeById
+--exec deleteProductTypeById
+
+create procedure deleteHoaDonById @id nvarchar(30)
+as begin
+update HoaDon
+set HoaDon.DaXoa = 1
+where HoaDon.MaHoaDon = @id
+end
 
 
+create procedure editNguoiDung @manguoidung nvarchar(30), @tendangnhap nvarchar(30),@matkhau nvarchar(30),@hoten nvarchar(100),@ngaysinh date, @diachi nvarchar(100),@hinh nvarchar(100)
+as begin
+update NguoiDung
+set NguoiDung.TenDangNhap=@tendangnhap,NguoiDung.MatKhau=@matkhau,NguoiDung.HoTen=@hoten,NguoiDung.NgaySinh=@ngaysinh,NguoiDung.DiaChi=@diachi,NguoiDung.Hinh=@hinh
+where NguoiDung.MaNguoiDung=@manguoidung
+end
+
+go
+create procedure editSanPham @masp nvarchar(10), @tensp nvarchar(100), @gia int, @chitiet nvarchar(100),@hinh nvarchar(100),@malsp nvarchar(10)
+as begin
+update SanPham
+set SanPham.TenSP=@tensp,SanPham.Gia=@gia,SanPham.ChiTiet=@chitiet,SanPham.Hinh=@hinh,SanPham.MaLoaiSP=@malsp
+where SanPham.MaSP=@masp
+end
 
 
+select * from HoaDon
+
+go
+create procedure editHoaDon @maHD nvarchar(30),@ghichu nvarchar(100),@tongthanhtoan int, @hoten nvarchar(100), @diachigiaohang nvarchar(200),
+@sodienthoai nvarchar(10), @maKH nvarchar(20), @thoigiangiaohang date, @trangthaidonhang bit, @trangthaigiaohang int, @trangthaithanhtoan bit
+as begin
+update HoaDon
+set HoaDon.GhiChu=@ghichu,HoaDon.TongThanhToan=@tongthanhtoan,HoaDon.HoTen=@hoten,HoaDon.DiaChiGiaoHang=@diachigiaohang,
+HoaDon.SoDienThoai=@sodienthoai,HoaDon.MaKhachHang=@maKH,HoaDon.ThoiGianGiaoHang=@thoigiangiaohang,HoaDon.TrangThaiDonHang=@trangthaidonhang,
+HoaDon.TrangThaiThanhToan=@trangthaithanhtoan
+where HoaDon.MaHoaDon=@maHD
+end
 
 
+go
+alter table HoaDon 
+alter COLUMN TrangThaiGiaoHang int
 
+select * from HoaDon where HoaDon.MaHoaDon not like '%cart%' order by HoaDon.ThoiGianGiaoHang DESC
 
+select * from NguoiDung

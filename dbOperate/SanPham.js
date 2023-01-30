@@ -104,6 +104,22 @@ async function DeleteLoaiSanPhamById(id) {
     console.log(error);
   }
 }
+async function EditSanPham(sanpham) {
+  try {
+    let pool = await sql.connect(config);
+    await pool
+      .request()
+      .input("MaSP", sql.NVarChar, sanpham.MaSP)
+      .input("TenSP", sql.NVarChar, sanpham.TenSP)
+      .input("Gia", sql.Int, sanpham.Gia)
+      .input("ChiTiet", sql.NVarChar, sanpham.ChiTiet)
+      .input("Hinh", sql.NVarChar, sanpham.Hinh)
+      .input("MaLoaiSP", sql.NVarChar, sanpham.MaLoaiSP)
+      .query("exec editSanPham @MaSP,@TenSP,@Gia,@ChiTiet,@Hinh,@MaLoaiSP");
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 module.exports = {
   getSanPham,
@@ -114,4 +130,5 @@ module.exports = {
   AddLoaiSanPham,
   DeleteSanPhamById,
   DeleteLoaiSanPhamById,
+  EditSanPham,
 };

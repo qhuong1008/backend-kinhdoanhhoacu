@@ -67,6 +67,12 @@ router.route(`/sanpham/delete/:id`).post((request, response) => {
     response.status(201).json(data);
   });
 });
+router.route("/sanpham/edit").post((request, response) => {
+  let sanpham = { ...request.body };
+  SanPhamDb.EditSanPham(sanpham).then((data) => {
+    response.status(201).json(data);
+  });
+});
 router.route(`/loaisanpham/delete/:id`).post((request, response) => {
   SanPhamDb.DeleteLoaiSanPhamById(request.params.id).then((data) => {
     response.status(201).json(data);
@@ -87,6 +93,12 @@ router.route("/nguoidung/:id").get((request, response) => {
 router.route("/nguoidung").post((request, response) => {
   let user = { ...request.body };
   NguoiDungDb.EditNguoiDung(user).then((data) => {
+    response.status(201).json(data);
+  });
+});
+router.route(`/nguoidung/edit`).post((request, response) => {
+  let user = { ...request.body };
+  NguoiDungDb.EditNguoiDungByAdmin(user).then((data) => {
     response.status(201).json(data);
   });
 });
@@ -156,6 +168,12 @@ router.route("/hoadon/orderId/:orderID").get((request, response) => {
 router.route("/hoadon/products/:orderID").get((request, response) => {
   HoaDonDb.getAllProductsFromHoaDon(request.params.orderID).then((data) => {
     response.json(data[0]);
+  });
+});
+router.route("/hoadon/edit").post((request, response) => {
+  let hoadon = { ...request.body };
+  HoaDonDb.EditOrder(hoadon).then((data) => {
+    response.status(201).json(data);
   });
 });
 // LISTEN PORT
