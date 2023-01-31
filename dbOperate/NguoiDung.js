@@ -10,6 +10,17 @@ async function getAllNguoiDung() {
     console.log(error);
   }
 }
+async function getAllAdmin() {
+  try {
+    let pool = await sql.connect(config);
+    let listNguoiDung = await pool
+      .request()
+      .query("select * from NguoiDung where NguoiDung.RoleID='000'");
+    return listNguoiDung.recordsets;
+  } catch (error) {
+    console.log(error);
+  }
+}
 async function getNguoiDungAuth(username, password) {
   try {
     let pool = await sql.connect(config);
@@ -123,6 +134,7 @@ async function ChangePassword(user) {
 }
 module.exports = {
   getAllNguoiDung,
+  getAllAdmin,
   getNguoiDungAuth,
   getNguoiDungById,
   AddNguoiDung,

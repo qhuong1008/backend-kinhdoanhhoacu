@@ -85,6 +85,11 @@ router.route("/nguoidung").get((request, response) => {
     response.json(data[0]);
   });
 });
+router.route("/admin").get((request, response) => {
+  NguoiDungDb.getAllAdmin().then((data) => {
+    response.json(data[0]);
+  });
+});
 router.route("/nguoidung/:id").get((request, response) => {
   NguoiDungDb.getNguoiDungById(request.params.id).then((data) => {
     response.json(data[0]);
